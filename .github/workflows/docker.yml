@@ -30,17 +30,12 @@ jobs:
       - name: Extract Version
         id: version
         run: echo "version=$(sh get_release_info.sh version)" |tee -a $GITHUB_OUTPUT
-      - name: Extract Version
-        id: skopeo
-        run: echo "list-images=$(skopeo list-tags docker://${{ env.REGISTRY }}/${{ github.repository }})" |tee -a $GITHUB_OUTPUT
+      - name: Docker Run Command
+        id: hello-world
+        run: docker run hello-world
 
 
-      # - name: Get current date/time in the usual format
-      #   id: date
-      #   run: echo "::set-output name=date::$(date +'%Y.%m.%d.%H%M%S')"
-      - name: Env
-        id: env
-        run: echo ${{ steps.skopeo.outputs.list-images }}
+
       # - name: Get current date/time in the usual format
       #   id: date
       #   run: echo "::set-output name=date::$(date +'%Y.%m.%d.%H%M%S')"
