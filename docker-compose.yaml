@@ -9,6 +9,8 @@ services:
       start_period: 15s
     restart: always
     build: .
+    ports:
+      - 8080:8080
     labels:
       # Default Values
       - "com.centurylinklabs.watchtower.enable=true"
@@ -22,7 +24,6 @@ services:
       # SSL Public Configuration
       - traefik.http.routers.cura-ssl.rule=Host(`cura.example.com``)
       - traefik.http.routers.cura-ssl.entrypoints=https
-      - traefik.http.routers.cura-ssl.tls.certresolver=acme-true
     volumes:
       - "./data/home:/home/cura/:rw"
       - "./data/prints:/prints/:rw"
