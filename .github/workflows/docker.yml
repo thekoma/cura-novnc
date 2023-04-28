@@ -2,8 +2,8 @@ name: Publish to Docker
 
 on:
   schedule:
-    - cron: '0 0 * * 5' # Every Friday at midnight we publish an image from latest to Docker Hub.
-  workflow_dispatch:
+    - cron: 0 0 * * 5
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io
@@ -30,10 +30,11 @@ jobs:
       - name: Extract Version
         id: version
         run: echo "version=$(sh get_release_info.sh version)" |tee -a $GITHUB_OUTPUT
-      - name: Docker Run Command
-        id: hello-world
-        run: docker run hello-world
-
+      - name: Release
+        id: release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.version.outputs.version }}
 
 
       # - name: Get current date/time in the usual format
