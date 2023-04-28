@@ -8,7 +8,7 @@
         </item>
         <item label="Firefox">
             <action name="Execute">
-                <execute>/usr/bin/pcmanfm</execute>
+                <execute>/usr/bin/firefox</execute>
             </action>
         </item>
         <item label="Terminal">

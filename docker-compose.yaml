@@ -1,0 +1,28 @@
+version: '3'
+services:
+  cura:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: always
+    build: .
+    labels:
+      # Default Values
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.services.cura.loadbalancer.server.port=8080"
+
+      # Plain Public Configuration
+      - "traefik.http.routers.cura-plain.rule=Host(`cura.example.com`)"
+      - "traefik.http.routers.cura-plain.entrypoints=http"
+
+      # SSL Public Configuration
+      - traefik.http.routers.cura-ssl.rule=Host(`cura.example.com``)
+      - traefik.http.routers.cura-ssl.entrypoints=https
+      - traefik.http.routers.cura-ssl.tls.certresolver=acme-true
+    volumes:
+      - "./data/home:/home/cura/:rw"
+      - "./data/prints:/prints/:rw"
