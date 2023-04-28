@@ -6,6 +6,11 @@
                 <execute>/cura/squashfs-root/AppRun</execute>
             </action>
         </item>
+        <item label="Firefox">
+            <action name="Execute">
+                <execute>/usr/bin/pcmanfm</execute>
+            </action>
+        </item>
         <item label="Terminal">
             <action name="Execute">
                 <execute>/usr/bin/x-terminal-emulator</execute>
