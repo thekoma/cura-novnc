@@ -30,14 +30,14 @@ jobs:
 
       - name: Check if this release already exists
         uses: mukunku/tag-exists-action@v1.2.0
-        id: checkTag
+        id: checktag
         with:
           tag: ${{ steps.version.outputs.version }}
 
       - name: Create new tag with Cura Version
         uses: rickstaa/action-create-tag@v1
         id: tag_create
-        if: ${{ steps.checkTag.outputs.exists != true }}
+        if: ${{ steps.checktag.outputs.exists == 'false' }}
         with:
           tag: ${{ steps.version.outputs.version }}
           tag_exists_error: false
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build and push Container
         uses: docker/build-push-action@v4
-        if: ${{ steps.checkTag.outputs.exists != true }}
+        if: ${{ steps.checktag.outputs.exists == 'false' }}
         with:
           context: .
           push: true
