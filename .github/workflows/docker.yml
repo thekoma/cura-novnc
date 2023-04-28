@@ -47,7 +47,7 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
-        if: ! ${{ steps.tag_create.outputs.tag_exists }}
+        if: ${{ ! steps.tag_create.outputs.tag_exists }}
         with:
           context: .
           push: true
