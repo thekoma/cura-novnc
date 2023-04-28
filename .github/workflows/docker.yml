@@ -37,26 +37,18 @@ jobs:
           tag_exists_error: false
           message: Latest release
 
-      # Print result using the env variable.
-      -  run: |
-          echo "Tag already present: ${{ env.TAG_EXISTS }}"
+      # # Print result using the env variable.
+      # -  run: |
+      #     echo "Tag already present: ${{ env.TAG_EXISTS }}"
 
-      # Print result using the action output.
-      - run: |
-          echo "Tag already present: ${{ steps.tag_create.outputs.tag_exists }}"
-      - name: Release
-        id: release
-        uses: softprops/action-gh-release@v1
+      # # Print result using the action output.
+      # - run: |
+      #     echo "Tag already present: ${{ steps.tag_create.outputs.tag_exists }}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        if: ! ${{ steps.tag_create.outputs.tag_exists }}
         with:
-          name: ${{ steps.version.outputs.version }}
-
-
-      # - name: Get current date/time in the usual format
-      #   id: date
-      #   run: echo "::set-output name=date::$(date +'%Y.%m.%d.%H%M%S')"
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest, ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.version.outputs.version }}
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest, ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.version.outputs.version }}
