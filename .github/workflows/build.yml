@@ -50,10 +50,10 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest, ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.version.outputs.version }}
-    - name: release
-      id: release
-      if: ${{ steps.checktag.outputs.exists == 'false' }}
-      uses: ncipollo/release-action@v1
-      with:
-        bodyFile: "README.md"
-        tag: ${{ steps.version.outputs.version }}
+      - name: release
+        id: release
+        if: ${{ steps.checktag.outputs.exists == 'false' }}
+        uses: ncipollo/release-action@v1
+        with:
+          bodyFile: "README.md"
+          tag: ${{ steps.version.outputs.version }}
