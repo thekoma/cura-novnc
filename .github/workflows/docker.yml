@@ -9,7 +9,6 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -24,30 +23,29 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Get current date/time in the usual format
-      #   id: version
-      #   run: echo "::set-output name=version::$(sh get_release_info.sh version)"
-      - name: Extract Version
+
+      - name: Extract latest available Cura Version
         id: version
         run: echo "version=$(sh get_release_info.sh version)" |tee -a $GITHUB_OUTPUT
-      - uses: rickstaa/action-create-tag@v1
+
+      - name: Check if this release already exists
+        uses: mukunku/tag-exists-action@v1.2.0
+        id: checkTag
+        with:
+          tag: ${{ steps.version.outputs.version }}
+
+      - name: Create new tag with Cura Version
+        uses: rickstaa/action-create-tag@v1
         id: tag_create
+        if: ${{ steps.checkTag.outputs.exists != true }}
         with:
           tag: ${{ steps.version.outputs.version }}
           tag_exists_error: false
-          message: Latest release
+          message: New Cura Release ${{ steps.version.outputs.version }}
 
-      # # Print result using the env variable.
-      # -  run: |
-      #     echo "Tag already present: ${{ env.TAG_EXISTS }}"
-
-      # # Print result using the action output.
-      # - run: |
-      #     echo "Tag already present: ${{ steps.tag_create.outputs.tag_exists }}"
-
-      - name: Build and push Docker image
+      - name: Build and push Container
         uses: docker/build-push-action@v4
-        if: ${{ steps.tag_create.outputs.tag_exists != true }}
+        if: ${{ steps.checkTag.outputs.exists != true }}
         with:
           context: .
           push: true
