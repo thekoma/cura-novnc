@@ -30,6 +30,20 @@ jobs:
       - name: Extract Version
         id: version
         run: echo "version=$(sh get_release_info.sh version)" |tee -a $GITHUB_OUTPUT
+      - uses: rickstaa/action-create-tag@v1
+        id: tag_create
+        with:
+          tag: ${{ steps.version.outputs.version }}
+          tag_exists_error: false
+          message: Latest release
+
+      # Print result using the env variable.
+      -  run: |
+          echo "Tag already present: ${{ env.TAG_EXISTS }}"
+
+      # Print result using the action output.
+      - run: |
+          echo "Tag already present: ${{ steps.tag_create.outputs.tag_exists }}"
       - name: Release
         id: release
         uses: softprops/action-gh-release@v1
